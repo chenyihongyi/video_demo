@@ -1,6 +1,7 @@
 package com.video.demo.video_demo.controller;
 
 import com.video.demo.video_demo.config.WeChatConfig;
+import com.video.demo.video_demo.domain.JsonData;
 import com.video.demo.video_demo.mapper.VideoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,9 +25,9 @@ public class TestController {
     private WeChatConfig weChatConfig;
 
     @RequestMapping("test_config")
-    public String testConfig(){
+    public JsonData testConfig(){
         System.out.println(weChatConfig.getAppId());
-        return "hello, weChatConfig";
+        return JsonData.buildSuccess(weChatConfig.getAppId());
     }
 
     @Autowired
