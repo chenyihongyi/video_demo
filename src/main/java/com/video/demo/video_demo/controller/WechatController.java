@@ -2,6 +2,7 @@ package com.video.demo.video_demo.controller;
 
 import com.video.demo.video_demo.config.WeChatConfig;
 import com.video.demo.video_demo.domain.JsonData;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +18,7 @@ import java.net.URLEncoder;
 @RequestMapping("/api/v1/wechat")
 public class WechatController {
 
+    @Autowired
     private WeChatConfig weChatConfig;
 
     /**
@@ -27,13 +29,13 @@ public class WechatController {
      */
     @GetMapping("login_url")
     @ResponseBody
-    public JsonData loginUrl(@RequestParam(value = "access_page", required = true) String accessPage) throws UnsupportedEncodingException {
+    public JsonData loginUrl(@RequestParam(value = "access_page",required = true)String accessPage) throws UnsupportedEncodingException {
 
         String redirectUrl = weChatConfig.getOpenRedirectUrl(); //获取开放平台重定向地址
 
-        String callbackUrl = URLEncoder.encode(redirectUrl,"GBK");
+        String callbackUrl = URLEncoder.encode(redirectUrl,"GBK"); //进行编码
 
-        String qrcodeUrl = String.format(weChatConfig.getOpenRedirectUrl(),weChatConfig.getOpenAppid(),callbackUrl,accessPage);
+        String qrcodeUrl = String.format(weChatConfig.getOpenQrcodeUrl(),weChatConfig.getOpenAppid(),callbackUrl,accessPage);
 
         return JsonData.buildSuccess(qrcodeUrl);
     }

@@ -13,6 +13,8 @@ import java.io.Serializable;
  */
 public class JsonData implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+
     private Integer code; // 状态码 0 表示成功，1表示处理中，-1表示失败
     private Object data;
     private String msg;
