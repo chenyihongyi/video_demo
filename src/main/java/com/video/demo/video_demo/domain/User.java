@@ -40,7 +40,7 @@ public class User implements Serializable {
     /**
      * 0表示女，1表示男
      */
-    private Byte sex;
+    private int sex;
 
     /**
      * 城市
@@ -100,11 +100,11 @@ public class User implements Serializable {
         this.sign = sign == null ? null : sign.trim();
     }
 
-    public Byte getSex() {
+    public int getSex() {
         return sex;
     }
 
-    public void setSex(Byte sex) {
+    public void setSex(int sex) {
         this.sex = sex;
     }
 
