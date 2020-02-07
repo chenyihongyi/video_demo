@@ -10,15 +10,14 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * @Description:
  * @Date: 2020/2/6 9:40
  */
-@Configuration
-public class IntercepterConfig implements WebMvcConfigurer {
-
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-
-
-        registry.addInterceptor(new LoginIntercepter()).addPathPatterns("/user/api/v1/*/**");
-
-        WebMvcConfigurer.super.addInterceptors(registry);
-    }
-}
+//@Configuration
+//public class IntercepterConfig implements WebMvcConfigurer {
+//
+//    @Override
+//    public void addInterceptors(InterceptorRegistry registry) {
+//
+//        registry.addInterceptor(new LoginIntercepter()).addPathPatterns("/user/api/v1/*/**");
+//
+//        WebMvcConfigurer.super.addInterceptors(registry);
+//    }
+//}
