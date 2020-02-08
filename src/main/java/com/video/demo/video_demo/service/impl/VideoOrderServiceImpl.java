@@ -98,20 +98,20 @@ public class VideoOrderServiceImpl implements VideoOrderService {
         String sign = WXPayUtil.createSign(params,weChatConfig.getKey());
         params.put("sign",sign);
 
-        //map转xml
-        String payXml = WXPayUtil.mapToXml(params);
+    //map转xml
+    String payXml = WXPayUtil.mapToXml(params);
 
         System.out.println(payXml);
-        //统一下单
-        String orderStr = HttpUtils.doPost(WeChatConfig.getUnifiedOrderUrl(), payXml, 4000);
-        if(null == orderStr){
-            return null;
-        }
-        Map<String, String> unifiedOrderMap = WXPayUtil.xmlToMap(orderStr);
+                //统一下单
+                String orderStr = HttpUtils.doPost(WeChatConfig.getUnifiedOrderUrl(),payXml,4000);
+                if (null == orderStr) {
+                return null;
+                }
+                Map<String, String> unifiedOrderMap = WXPayUtil.xmlToMap(orderStr);
         System.out.println(unifiedOrderMap.toString());
-if(unifiedOrderMap != null){
-    return unifiedOrderMap.get("code_url");
+        if (unifiedOrderMap != null) {
+        return unifiedOrderMap.get("code_url");
         }
         return null;
-    }
-}
+        }
+        }
