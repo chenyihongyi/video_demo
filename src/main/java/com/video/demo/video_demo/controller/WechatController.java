@@ -3,7 +3,9 @@ package com.video.demo.video_demo.controller;
 import com.video.demo.video_demo.config.WeChatConfig;
 import com.video.demo.video_demo.domain.JsonData;
 import com.video.demo.video_demo.domain.User;
+import com.video.demo.video_demo.domain.VideoOrder;
 import com.video.demo.video_demo.service.UserService;
+import com.video.demo.video_demo.service.VideoOrderService;
 import com.video.demo.video_demo.utils.JwtUtils;
 import com.video.demo.video_demo.utils.WXPayUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +16,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URLEncoder;
+import java.util.Date;
 import java.util.Map;
+import java.util.SortedMap;
 
 /**
  * @Author: Elvis
@@ -28,7 +32,11 @@ public class WechatController {
     @Autowired
     private WeChatConfig weChatConfig;
 
+    @Autowired
     private UserService userService;
+
+    @Autowired
+    private VideoOrderService videoOrderService;
 
     /**
      * 拼装微信扫一扫登录url
@@ -92,5 +100,33 @@ public class WechatController {
         inputStream.close();
         Map<String, String> callbackMap = WXPayUtil.xmlToMap(sb.toString());
         System.out.println(callbackMap.toString());
+
+        SortedMap<String, String> sortedMap = WXPayUtil.getSortedMap(callbackMap);
+
+        //判断签名是否正确
+        if (WXPayUtil.isCorrectSign(sortedMap,weChatConfig.getKey())) {
+            if ("SUCCESS".equals(sortedMap.get("result_code"))) {
+                String outTradeNo = sortedMap.get("out_trade_no");
+
+                VideoOrder dbVideoOrder = videoOrderService.findByOutTrade(outTradeNo);
+
+                if (dbVideoOrder != null && dbVideoOrder.getState() == 0) {
+                    VideoOrder videoOrder = new VideoOrder();
+                    videoOrder.setOpenid(sortedMap.get("openid"));
+                    videoOrder.setOutTradeNo(outTradeNo);
+                    videoOrder.setNotifyTime(new Date());
+                    videoOrder.setState(1);
+                    int rows = videoOrderService.updateVideoOrderByOutTradeNo(videoOrder);
+                    if (rows == 1) { //通知微信订单处理成功
+                        response.setContentType("text/xml");
+                        response.getWriter().print("success");
+                        return;
+                    }
+                }
+            }
+        }
+         //处理失败
+        response.setContentType("text/xml");
+        response.getWriter().print("fail");
     }
 }

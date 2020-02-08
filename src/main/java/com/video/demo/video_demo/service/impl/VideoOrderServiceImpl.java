@@ -1,6 +1,5 @@
 package com.video.demo.video_demo.service.impl;
 
-
 import com.video.demo.video_demo.config.WeChatConfig;
 import com.video.demo.video_demo.domain.User;
 import com.video.demo.video_demo.domain.Video;
@@ -72,6 +71,16 @@ public class VideoOrderServiceImpl implements VideoOrderService {
         String codeUrl = unifiedOrder(videoOrder);
 
         return codeUrl;
+    }
+
+    @Override
+    public VideoOrder findByOutTrade(String outTradeNo) {
+        return videoOrderMapper.findByOutTradeNo(outTradeNo);
+    }
+
+    @Override
+    public int updateVideoOrderByOutTradeNo(VideoOrder videoOrder) {
+        return videoOrderMapper.updateVideoOrderByOutTradeNo(videoOrder);
     }
 
     /**
