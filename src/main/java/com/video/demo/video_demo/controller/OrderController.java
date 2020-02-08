@@ -38,7 +38,7 @@ public class OrderController {
                               HttpServletRequest request,
                               HttpServletResponse response) throws Exception{
        // String ip = IpUtils.getIpAddr(request);
-       // int userId = request.getAttribute("user_id");
+       // int userId = (Integer) request.getAttribute("user_id");
         int userId = 1; //临时写死
         String ip = "120.25.1.38";
         VideoOrderDto videoOrderDto = new VideoOrderDto();
