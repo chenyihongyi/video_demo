@@ -28,14 +28,17 @@ public class OrderController {
     @GetMapping("add")
     public JsonData saveOrder(@RequestParam(value="video_id", required = true)int videoId,
                               HttpServletRequest request) throws Exception{
-        String ip = IpUtils.getIpAddr(request);
+       // String ip = IpUtils.getIpAddr(request);
        // int userId = request.getAttribute("user_id");
-        int userId = 1;
+        int userId = 1; //临时写死
+        String ip = "120.25.1.38";
         VideoOrderDto videoOrderDto = new VideoOrderDto();
         videoOrderDto.setUserId(userId);
         videoOrderDto.setVideoId(videoId);
         videoOrderDto.setIp(ip);
-        videoOrderService.save(videoOrderDto);
+        String codeUrl = videoOrderService.save(videoOrderDto);
+
+        //生成二维码
 
         return JsonData.buildSuccess("下单成功");
     }
