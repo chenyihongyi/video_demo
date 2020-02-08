@@ -5,14 +5,16 @@ import com.video.demo.video_demo.domain.JsonData;
 import com.video.demo.video_demo.domain.User;
 import com.video.demo.video_demo.service.UserService;
 import com.video.demo.video_demo.utils.JwtUtils;
+import com.video.demo.video_demo.utils.WXPayUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.URLEncoder;
+import java.util.Map;
 
 /**
  * @Author: Elvis
@@ -66,5 +68,29 @@ public class WechatController {
             // state 当前用户的页面地址，需要拼接 http://  这样才不会站内跳转
             response.sendRedirect(state+"?token="+token+"&head_img="+user.getHeadImg()+"&name="+URLEncoder.encode(user.getName(),"UTF-8"));
         }
+    }
+
+    /**
+     * 微信支付回调
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    //GetMapping用这个注解会报错
+    @RequestMapping("/order/callback")  //回调要用post方式,微信文档没有写回调的通知方式，可以用这个注解@RequestMapping
+    public void orderCallback(HttpServletRequest request, HttpServletResponse response) throws Exception{
+        InputStream inputStream = request.getInputStream();
+
+        //BufferedReader是包装设计模式，性能更高
+        BufferedReader in =  new BufferedReader(new InputStreamReader(inputStream,"UTF-8"));
+        StringBuffer sb = new StringBuffer();
+        String line;
+        while((line = in.readLine()) !=null){
+            sb.append(line);
+        }
+        in.close();
+        inputStream.close();
+        Map<String, String> callbackMap = WXPayUtil.xmlToMap(sb.toString());
+        System.out.println(callbackMap.toString());
     }
 }
